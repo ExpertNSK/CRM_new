@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Добавить специализацию</title>
+{% endblock title %}
+
+{% block content %}
+  <div class="row justify-content-center my-4">
+    <div class="col-md p-5">
+      <div class="card">
+        <div class="card-header">
+          Добавить специализацию
+        </div>
+        <div class="card-body">
+            <form method="post" action="{% url 'loaders:status_edit' object.pk %}">
+              {% csrf_token %}
+              {% for field in form %}
+              <div class="form-group row my-3 p-3">
+                <label for="{{ field.id_for_label }}">
+                  {{ field.label }}
+                  {% if field.field.required %}
+                    <span class="required text-danger">*</span>
+                  {% endif %}
+                </label>    
+                {{ field }}
+                </div>
+              {% endfor %}
+              <div class="col-md-6 offset-md-4">
+                <button type="submit" class="btn btn-primary">
+                  Сохранить
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  </div>
+{% endblock content %}
+    
+    

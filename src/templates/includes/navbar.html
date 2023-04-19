@@ -1,0 +1,60 @@
+<nav class="navbar navbar-expand-sm fixed-top" style="background-color: #abd9cb;">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'staff:list' %}">A-Stroy CRM</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      
+      {% if user.is_authenticated %}
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Заявки</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'shedule:shedule' %}">График</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Справочники
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{% url 'staff:list' %}">Офисный персонал</a></li>
+              <li><a class="dropdown-item" href="{% url 'loaders:list' %}">Грузчики</a></li>
+              <li><a class="dropdown-item" href="#">Контрагенты</a></li>
+              
+              {% if user.is_admin %}
+                <li><a class="dropdown-item" href="{% url 'loaders:spec_list' %}">Специализации</a></li>
+                <li><a class="dropdown-item" href="{% url 'loaders:status_list' %}">Статусы работы</a></li>
+                <li><a class="dropdown-item" href="{% url 'loaders:pay_method_list' %}">Способы оплаты</a></li>
+              {% endif %}
+                
+              
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Профиль
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{% url 'users:edit' user.id %}">{{ user }}</a></li>
+              <li><a class="dropdown-item" href="{% url 'users:logout' %}">Выйти</a></li>
+            </ul>
+          </li>
+        </ul>
+      {% else %}
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Профиль
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'users:login' %}">Войти</a></li>
+            <li><a class="dropdown-item" href="{% url 'users:signup' %}">Зарегистрироваться</a></li>
+          </ul>
+        </li>
+      </ul>
+      {% endif %}
+    </div>
+  </div>
+</nav>

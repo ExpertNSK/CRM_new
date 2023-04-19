@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load user_filters %}
+
+{% block title %}
+  <title>{{ profile }}</title>
+{% endblock title %}
+
+{% block content %}
+  <div class="container my-5">
+    
+    {% if user.id == object.id %}
+      <div class="card text-center">
+        <div class="card-header">
+          {{ object }}
+        </div>
+          <div class="card-body">
+            <p class="card-text">email: {{ object.email }}</p>
+            <p class="card-text">Телефон: {{ object.phone }}</p>
+            <p class="card-text">Роль: {{ object.role }}</p>
+            <a href="{% url 'staff:list' %}" type="button" class="btn btn-primary">
+              Закрыть
+            </a>
+            <!-- Кнопка-триггер модального окна -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              Редактировать
+            </button>
+            <!-- Модальное окно -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Редактировать профиль</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                  </div>
+                  <form method="POST" action="{% url 'users:edit' object.id %}">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group row my-3 p-3">
+                          <label class="form-label">Фамилия:</label>
+                          {{ form.last_name }}
+                          <label class="form-label">Имя:</label>
+                          {{ form.first_name }}
+                          <label class="form-label">Отчество:</label>
+                          {{ form.middle_name }}
+                          <label class="form-label">email:</label>
+                          {{ form.email }}
+                          <label class="form-label">Телефон:</label>
+                          {{ form.phone }}
+                          
+                          {% if user.is_admin %}
+                            <label class="form-label">Роль:</label>
+                            {{ form.role }}
+                          {% else %}
+                            <input type="hidden" name="role" value="{{ object.role }}">
+                          {% endif %}
+                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                      <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+      
+  </div>  
+{% endblock content %}
+  

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load user_filters %}
+
+{% block content %}
+<div class="container my-5">
+  <h1>График</h1>
+    <div class="row">
+      {% comment %} Панель управления {% endcomment %}
+      <div class="d-grid gap-2 d-md-block my-2">
+        <button class="btn btn-primary" type="button">Button</button>
+        <button class="btn btn-primary" type="button">Button</button>
+      </div>
+    </div>
+    <div class="row">
+      {% comment %} Таблица график {% endcomment %}
+      <table class="table table-bordered">
+        <thead>
+          <tr class="table-success">
+            <th scope="col">Ф.И.О.:</th>
+            {% for date in dates %}
+              <th>{{ date }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for loader in loaders %}
+            <td>{{ loader }}</td>
+            
+            {% for workday in workdays|loader_filter:loader %}
+              
+              {% if workday.start_time %}
+                <td>{{ workday.start_time }} - {{ workday.end_time }}</td>
+              {% else %}
+                <td>Выходной</td>
+              {% endif %}
+                
+            {% endfor %}
+              
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+</div>
+{% endblock content %}
+  

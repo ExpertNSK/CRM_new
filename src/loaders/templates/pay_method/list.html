@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Способы оплаты</title>
+{% endblock title %}
+
+{% block content %}
+  <div class="row justify-content-center my-4">
+    <div class="col-md-8 mx-auto my-2">
+      <a href="{% url 'loaders:pay_method_add' %}">
+        <button type="submit" class="btn btn-sm btn-primary">Добавить</button>
+      </a>
+      <table class="table table-hover my-2">
+        <thead>
+          <tr style="background: #abd9cb;">
+            <th scope="col">Способы оплаты</th>
+            <th scope="col">&nbsp;</th>
+            <th scope="col">&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        {% for object in object_list %}
+        <tr>
+          <td>
+              {{ object }}
+          </td>
+          <td>
+            <a href="{% url 'loaders:pay_method_edit' object.pk %}">
+              <button type="submit" class="btn btn-primary">Редактировать</button>
+            </a>
+          </td>
+          <td>
+            <a href="{% url 'loaders:pay_method_delete' object.pk %}">
+              <button type="submit" class="btn btn-danger">Удалить</button>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+{% endblock content %}
+    
+    

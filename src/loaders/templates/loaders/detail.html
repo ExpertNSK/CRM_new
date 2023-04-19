@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% block title %}
+  <title>A-Stroy - Профиль</title>
+{% endblock %}
+{% block content %}
+  <div class="container my-5">
+          
+    <div class="card mb-3" >
+      <div class="row g-0">
+        <div class="col-md-4">
+          {% thumbnail object.photo "400x300" crop="center" upscale=True as img %}
+            <img src="{{ img.url }}" class="img-thumbnail rounded-start my-1 mx-2">
+          {% endthumbnail %}
+          <div class="d-grid gap-2 col-11 mx-auto mb-1">
+              <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editProfile">
+              Редактировать профиль
+            </button>
+            
+            
+            {% if not object.passport %}
+              <button type="submit" class="btn btn-sm btn-danger" onclick="window.location.href='/loaders/detail/passport_add/{{ object.pk }}'">Добавить паспортные данные</button>
+            {% else %}
+              <button type="submit" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#showPassport">Показать паспортные данные</button>
+            {% endif %}
+            {% if not object.pay_method %}
+              <button type="submit" class="btn btn-sm btn-danger" onclick="window.location.href='/loaders/detail/pay_method_add/{{ object.pk }}'">Добавить платежные данные</button>
+            {% else %}
+              <button type="submit" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#showPayMethod">Показать платежные данные</button>
+            {% endif %}
+              <button type="submit" class="btn btn-sm btn-primary" onclick="window.location.href='/loaders/list/'">Закрыть</button>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">{{ object }}</h5><hr>
+            <div class="row">
+              <div class="col-6">
+              <p class="card-text"><strong>Телефон: </strong>{{ object.phone }}</p>
+              <p class="card-text"><strong>WhatsApp: </strong>{{ object.whatsapp }}</p>
+              <p class="card-text"><strong>Район проживания: </strong>{{ object.area }}</p>
+              <p class="card-text"><strong>Статус: </strong>{{ object.status }}</p>
+              <p class="card-text"><strong>Дата приема: </strong>{{ object.date_of_employment }}</p>
+              <p class="card-text"><strong>Рейтинг: </strong>{{ object.rating }}</p>
+              {% if object.referer %}
+              <p class="card-text"><strong>Кто пригласил: </strong><a href="
+                {% url 'staff:detail' object.referer.id %}
+                ">{{ object.referer }}</a></p>
+              {% endif %}
+            </div>
+            <div class="col-6">
+              <p class="card-text"><strong>Специализация: </strong><br>{% for spc in object.specialization.all %}<li>{{spc}}</li><br>{% endfor %}</p>
+            </div>    
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% comment %} Modal Edit Profile {% endcomment %}
+  <div class="modal fade" id="editProfile" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Редактировать профиль</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <form method="POST" action="{% url 'loaders:detail' object.id %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-body">
+              <div class="card">
+                <div class="card-header">
+                  Персональные данные
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="row">
+                        <div class="row py-1">
+                          <div class="col-4">
+                            <label class="form-label">Фамилия:</label>
+                          </div>
+                          <div class="col-8">
+                            {{ form.last_name }}
+                          </div>
+                        </div>
+                        <div class="row py-1">
+                          <div class="col-4">
+                            <label class="form-label">Имя:</label>
+                          </div>
+                          <div class="col-8">
+                            {{ form.first_name }}
+                          </div>
+                        </div>
+                        <div class="row py-1">
+                          <div class="col-4">
+                            <label class="form-label">Отчество:</label>
+                          </div>
+                          <div class="col-8">
+                            {{ form.middle_name }}
+                          </div>
+                        </div>
+                        <div class="row py-1">
+                          <div class="col-4">
+                            <label class="form-label">Телефон:</label>
+                          </div>
+                          <div class="col-8">
+                            {{ form.phone }}
+                          </div>
+                        </div>
+                        <div class="row py-1">
+                          <div class="col-4">
+                            <label class="form-label">WhatsApp:</label>
+                          </div>
+                          <div class="col-8">
+                            {{ form.whatsapp }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="row">
+                        <div class="row py-1">
+                          <div class="col-4">
+                            <label class="form-label">Район:</label>
+                          </div>
+                          <div class="col-8">
+                            {{ form.area }}
+                          </div>
+                        </div>
+                        <div class="row py-1">
+                          <div class="col-4">
+                            <label class="form-label">Статус:</label>
+                          </div>
+                          <div class="col-8">
+                            {{ form.status }}
+                          </div>
+                        </div>
+                        <div class="row py-1">
+                          <div class="col-4">
+                            <label class="form-label">Кто пригласил:</label>
+                          </div>
+                          <div class="col-8">
+                            {{ form.referer }}
+                          </div>
+                          <div class="col-4">
+                            <label class="form-label">Фото:</label>
+                          </div>
+                          <div class="col-8">
+                            {{ form.photo }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-header">
+                  Специализация
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    {{ form.specialization }}
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% comment %} Modal Passport {% endcomment %}
+  <div class="modal fade" id="showPassport" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="card mb-3" >
+          <div class="row g-0">
+            <div class="col-md-4">
+              {% thumbnail object.passport.photo_main_page "400x300" crop="center" upscale=True as img %}
+                <img src="{{ img.url }}" class="img-thumbnail rounded-start my-2 mx-2">
+              {% endthumbnail %}
+              {% thumbnail object.passport.photo_registration "400x300" crop="center" upscale=True as img %}
+                <img src="{{ img.url }}" class="img-thumbnail rounded-start my-2 mx-2">
+              {% endthumbnail %}
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <div class="row">
+                  <p class="card-text"><strong>Серия номер: </strong>{{ object.passport.serial_number }}</p>
+                  <p class="card-text"><strong>Кем выдан: </strong>{{ object.passport.issued_by }}</p>
+                  <p class="card-text"><strong>Код подразделения: </strong>{{ object.passport.division_code }}</p>
+                  <p class="card-text"><strong>Дата выдачи: </strong>{{ object.passport.date_of_issue }}</p>
+                  <p class="card-text"><strong>Ф.И.О: </strong>{{ object.passport.last_name }} {{ object.passport.first_name }} {{ object.passport.middle_name }}</p>
+                  <p class="card-text"><strong>Дата рождения: </strong>{{ object.passport.birthday }}</p>
+                  <p class="card-text"><strong>Место рождения: </strong>{{ object.passport.place_of_birth }}</p>
+                </div>
+                <div class="d-grid gap-2 col-11 mx-auto my-2">
+                  {% if user.is_admin %}
+                    <button type="submit" class="btn btn-sm btn-primary" onclick="window.location.href='/loaders/detail/passport_edit/{{ object.pk }}'" >Редактировать данные</button>
+                  {% endif %}
+                    <button type="submit" class="btn btn-sm btn-primary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    {% comment %} Modal Pay Method {% endcomment %}
+    <div class="modal fade" id="showPayMethod" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="card mb-3" >
+            <div class="row g-0">
+              <div class="col-md mg-auto">
+                <div class="card-body">
+                  <div class="d-grid gap-2 col-11 mx-auto my-1">
+                    <p class="card-text"><strong>Способ оплаты: </strong>{{ object.pay_method.pay_method }}</p>
+                    <p class="card-text"><strong>Реквизиты для оплаты: </strong>{{ object.pay_method.requisites }}</p>
+                    <p class="card-text"><strong>Банк: </strong>{{ object.pay_method.bank }}</p>
+                    
+                    {% if object.pay_method.comments %}
+                      <p class="card-text"><strong>Комментарии к оплате: </strong>{{ object.pay_method.comments }}</p>
+                    {% endif %}
+                  
+                    <hr>
+                    {% if user.is_admin %}
+                      <button type="submit" class="btn btn-sm btn-primary" onclick="window.location.href='/loaders/detail/passport_add/{{ object.pk }}'" >Редактировать данные</button>
+                    {% endif %}
+
+                      <button type="submit" class="btn btn-sm btn-primary" data-bs-dismiss="modal">Закрыть</button>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+{% endblock %}

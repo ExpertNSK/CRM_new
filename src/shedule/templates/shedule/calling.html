@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load user_filters %}
+
+{% block content %}
+  <div class="container my-5">
+    <h1>Обзвон</h1>
+      <div class="row my-2">
+        <div class="d-grid gap-2 d-md-block">
+          <button class="btn btn-primary" type="button">Button</button>
+          <button class="btn btn-primary" type="button">Button</button>
+        </div>
+      </div>
+      <div class="row my-2">
+        <table class="table table-bordered align-middle table-hover">
+          <thead>
+            <tr class="table-success">
+              <th scope="col">Ф.И.О.</th>
+              <th scope="col">Телефон</th>
+              <th scope="col">Рейтинг</th>
+              <th scope="col">Статус</th>
+              <th scope="col">Специализация</th>
+              <th scope="col">Последний обзвон</th>
+              <th scope="col">Статус последнего обзвона</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for loader in loaders %}
+              <tr class="clickable-row" data-bs-toggle="modal" data-bs-target="#editNextWeek{{loader.id}}">
+                <th scope="row">{{ loader }}</th>
+                <td>{{ loader.phone }}</td>
+                <td>{{ loader.rating }}</td>
+                <td>{{ loader.status }}</td>
+                <td>{% for spc in loader.specialization.all %} {{ spc }}<br> {% endfor %}</td>
+                
+                {% for call_result in call_results|loader_filter:loader %}
+                  
+                  {% if call_result.date_last_call %}
+                    <td>{{ call_result.date_last_call }}</td>
+                    <td>{{ call_result.last_call_result }}</td>
+                  {% else %}
+                    <td colspan="2" style="text-align: center">Не было обзвонов</td>
+                  {% endif %}
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+  </div>
+  
+  {% for loader in loaders %}
+  <div class="modal fade" id="editNextWeek{{loader.id}}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">{{ loader }} - {{ loader.phone }}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        {{ form.media }}
+        <form action="{% url 'shedule:calling' %}" method="post">
+          {% csrf_token %}
+          <div class="modal-body">
+            <input name="loader" type="number" value="{{ loader.id }}" hidden="true">
+            <select required="true" id="callstatus" class="form-select form-select-sm" name="call_status">
+              <option selected>Успешно</option>
+              <option>Не берет трубку</option>
+              <option>Телефон не доступен</option>
+              <option>Неправильный номер и/или Другой абонент</option>
+              <option>Занят телефон</option>
+              <option>Отказался работать на этой неделе</option>
+              <option>Не работает больше грузчиком</option>
+              <option>Нет желания работать с нами</option>
+            </select>
+            <table class="table table-bordered my-2">
+              <thead>
+                <tr class="table-success">
+                  <th>День</th>
+                  {% for date in dates %}
+                    <th> {{ date }}</th>
+                  {% endfor %}
+                </tr>
+                <tr>
+                  <th>Время начала дня</th>
+                  
+                  {% autoescape off %}
+                    {% for date in dates %}
+                      <th>{{ form.start_time|start_day_id:date }}</th>
+                  {% endfor %}
+                  {% endautoescape %}
+                  
+                  
+                </tr>
+                <tr>
+                  <th>Время завершения дня</th>
+                  {% for date in dates %}
+                    <th>{{ form.end_time|end_day_id:date }}</th>
+                  {% endfor %}
+                </tr>
+                <tr>
+                  <th>&nbsp;</th>
+                  {% for date in dates %}
+                    <th><button type="button" class="btn btn-sm btn-dark" onclick="
+                      document.getElementById('start{{date}}').value='8:00'
+                      document.getElementById('end{{date}}').value='20:00'">Весь день</button></th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+    
+  {% endfor %}
+{% endblock content %}
+  
