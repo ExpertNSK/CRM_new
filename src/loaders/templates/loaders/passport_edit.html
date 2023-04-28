@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    <title>Добавить платежные данные</title>
+    <title>Редактировать паспортные данные</title>
 {% endblock title %}
 
 {% block content %}
@@ -9,7 +9,7 @@
     <div class="col-md p-5">
       <div class="card">
         <div class="card-header">
-          Добавить платежные данные
+          Редактировать паспортные данные
         </div>
         <div class="card-body">
           {% if form.errors %}
@@ -27,7 +27,7 @@
             {% endfor %}
           {% endif %}
           {{ form.media }}
-            <form method="post" action="{% url 'loaders:pay_method_fl_add' pk=loader.id %}" enctype="multipart/form-data">
+            <form method="post" action="{% url 'loaders:passport_edit' pk=loader.id %}" enctype="multipart/form-data">
               {% csrf_token %}
               {% for field in form %}
               <div class="form-group row my-3 p-3">
@@ -50,6 +50,8 @@
         </div>
       </div>
   </div>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
 {% endblock content %}
     
     

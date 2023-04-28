@@ -10,6 +10,9 @@ class CustomUserManager(BaseUserManager):
         email = self.normalize_email(email=email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
+        if user.is_superuser:
+            phone = user.phone
+            user.phone = f'+7 ({phone[2:5]}) {phone[5:8]}-{phone[8:10]}-{phone[10:]}'
         user.save(using=self.db)
         return user
     

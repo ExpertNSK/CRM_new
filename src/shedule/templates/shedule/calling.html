@@ -82,11 +82,9 @@
                 <tr>
                   <th>Время начала дня</th>
                   
-                  {% autoescape off %}
                     {% for date in dates %}
                       <th>{{ form.start_time|start_day_id:date }}</th>
                   {% endfor %}
-                  {% endautoescape %}
                   
                   
                 </tr>

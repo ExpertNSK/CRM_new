@@ -5,7 +5,7 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView, D
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
-from loaders.models import Loader, Passport, PayMethodList, Specialization, Status
+from loaders.models import Loader, Passport, PayMethod, PayMethodList, Specialization, Status
 from loaders.forms import CreateLoaderForm, CreatePassportForm, CreatePayMethodForm, CreatePayMethodList, CreateSpecializationForm, CreateStatusForm
 from shedule.utils import create_call_result, workdays_bulk_create
 
@@ -84,6 +84,18 @@ class CreatePassportView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     
     def get_success_url(self) -> str:
         return reverse_lazy('loaders:detail', kwargs={'pk': self.kwargs['pk']})
+
+
+class UpdatePassportView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Passport
+    form_class = CreatePassportForm
+    template_name = 'loaders/passport_edit.html'
+    success_message = 'Паспортные данные успешно сохранены'
+
+    def get_object(self):
+        loader_id = self.kwargs['pk']
+        loader = Loader.objects.filter(id=loader_id).get()
+        return loader.passport
 
 
 class ListSpecializationView(LoginRequiredMixin, ListView):
@@ -165,7 +177,7 @@ class DeletePayMethodListView(LoginRequiredMixin, DeleteView):
 
 
 class CreatePayMethodView(CreatePassportView):
-    model = Passport
+    model = PayMethod
     parent_model = Loader
     form_class = CreatePayMethodForm
     template_name = 'loaders/pay_method_add.html'
