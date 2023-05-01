@@ -1,6 +1,7 @@
 import datetime as dt
 from django.shortcuts import render
 from shedule.forms import UpdateWorkDayForm
+from shedule.lists import CALL_RESULTS_NEGATIVE
 
 from shedule.models import CallResult, WorkShedule
 
@@ -35,8 +36,10 @@ def calling(request):
         'call_results': call_results,
         'dates': dates,
         'form': form,
+        'call_statuses': CALL_RESULTS_NEGATIVE,
     }
     if request.method == 'POST':
+        print(request.POST)
         if not check_callstatus(request):
             pass
         else:

@@ -27,8 +27,7 @@ def get_dates(request=None, curr_week=False, next_week=False):
         )
         start_day += one_day
     return dates, date_filter
-    
-        
+
 def get_loaders(request=None):
     return Loader.objects.filter(is_active=True)
 
@@ -71,11 +70,55 @@ def workdays_create(request, dates):
             }
         )
 
-
 def check_callstatus(request):
-    call_status = request.POST.get('call_status')
-    loader = request.POST.get('loader')
-    object = CallResult.objects.filter(
+    loader = Loader.objects.filter(
+        id=request.POST.get('loader')
+    ).get()
+    call_result = CallResult.objects.filter(
         loader=loader
-    )
-    return True
+    ).get()
+    call_status = request.POST.get('call_status')
+    if call_status in CALL_RESULTS_NEGATIVE:
+        if call_status == 'failed':
+            reason = request.POST.get('reason')
+            loader.__class__.objects.update(
+                is_active=False
+            )
+            call_result.__class__.objects.update(
+                last_call_result=CALL_RESULTS_NEGATIVE[call_status],
+                date_last_call=dt.datetime.now().strftime('%Y-%m-%d'),
+                day_get_last_status=dt.datetime.now().strftime('%Y-%m-%d'),
+                comment=reason
+            )
+        elif loader.calls.last_call_result == CALL_RESULTS_NEGATIVE[call_status]:
+            period = dt.datetime.now().date() - loader.calls.day_get_last_status
+            if period.days >= 21:
+                loader.__class__.objects.update(
+                    is_active=False
+                )
+                call_result.__class__.objects.update(
+                    date_last_call=dt.datetime.now().strftime('%Y-%m-%d'),
+                    comment=(
+                        'Переведен в статус "Не активен" автоматически.'
+                        f' Причина: статус "{loader.calls.last_call_result}" '
+                        'более трёх недель.'
+                    )
+                )
+            else:
+                call_result.__class__.objects.update(
+                    date_last_call=dt.datetime.now().strftime('%Y-%m-%d'),
+                )
+        else:
+            call_result.__class__.objects.update(
+                last_call_result=CALL_RESULTS_NEGATIVE[call_status],
+                date_last_call=dt.datetime.now().strftime('%Y-%m-%d'),
+                day_get_last_status=dt.datetime.now().strftime('%Y-%m-%d'),
+            )
+        return False
+    else:
+        call_result.__class__.objects.update(
+                last_call_result='Успешно',
+                date_last_call=dt.datetime.now().strftime('%Y-%m-%d'),
+                day_get_last_status=dt.datetime.now().strftime('%Y-%m-%d'),
+            )
+        return True

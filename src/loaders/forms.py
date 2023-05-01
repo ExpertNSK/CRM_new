@@ -11,6 +11,7 @@ class CreateLoaderForm(forms.ModelForm):
             attrs={
             'class': 'form-control',
             'placeholder': 'Введите фамилию',
+            'autocomplete': 'off'
           }
         )
     )
@@ -20,6 +21,7 @@ class CreateLoaderForm(forms.ModelForm):
             attrs={
             'class': 'form-control',
             'placeholder': 'Введите имя',
+            'autocomplete': 'off'
           }
         )
     )
@@ -29,6 +31,7 @@ class CreateLoaderForm(forms.ModelForm):
             attrs={
             'class': 'form-control',
             'placeholder': 'Введите отчество',
+            'autocomplete': 'off'
           }
         )
     )
@@ -39,6 +42,7 @@ class CreateLoaderForm(forms.ModelForm):
           'class': 'form-control',
           'data-mask': '+7 (000) 000-00-00',
           'placeholder': 'Введите номер телефона',
+          'autocomplete': 'off'
         }
         )
     )
@@ -49,7 +53,8 @@ class CreateLoaderForm(forms.ModelForm):
         attrs={
           'class': 'form-control',
           'data-mask': '+7 (000) 000-00-00',
-          'placeholder': 'Оставьте пустым если номера совпадают'
+          'placeholder': 'Оставьте пустым если номера совпадают',
+          'autocomplete': 'off'
         }
         )
     )
@@ -127,7 +132,8 @@ class CreateSpecializationForm(forms.ModelForm):
         max_length=50,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control'
+                'class': 'form-control',
+                'autocomplete': 'off'
             }
         )
     )
@@ -143,7 +149,8 @@ class CreateStatusForm(forms.ModelForm):
         max_length=50,
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control'
+                'class': 'form-control',
+                'autocomplete': 'off'
             }
         )
     )
@@ -160,7 +167,8 @@ class CreatePassportForm(forms.ModelForm):
         attrs={
             'class': 'form-control',
             'data-mask': '00 00 000000',
-            'placeholder': 'XX XX XXXXXX'
+            'placeholder': 'XX XX XXXXXX',
+            'autocomplete': 'off'
         }
         )
     )
@@ -169,6 +177,7 @@ class CreatePassportForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
+                'autocomplete': 'off'
             }
         )
     )
@@ -178,15 +187,21 @@ class CreatePassportForm(forms.ModelForm):
             attrs={
                 'class': 'form-control',
                 'data-mask': '000-000',
-                'placeholder': 'XXX-XXX'
+                'placeholder': 'XXX-XXX',
+                'autocomplete': 'off'
             }
         )
     )
     date_of_issue = forms.DateField(
         label='Дата выдачи',
         widget=DatePickerInput(
+            options={
+                'format': 'DD-MM-YYYY',
+                'locale': 'ru',
+            },
             attrs={
                 'class': 'form-control',
+                'autocomplete': 'off'
             }
         )
     )
@@ -196,6 +211,7 @@ class CreatePassportForm(forms.ModelForm):
             attrs={
             'class': 'form-control',
             'placeholder': 'Введите фамилию',
+            'autocomplete': 'off'
           }
         )
     )
@@ -205,6 +221,7 @@ class CreatePassportForm(forms.ModelForm):
             attrs={
             'class': 'form-control',
             'placeholder': 'Введите имя',
+            'autocomplete': 'off'
           }
         )
     )
@@ -214,14 +231,20 @@ class CreatePassportForm(forms.ModelForm):
             attrs={
             'class': 'form-control',
             'placeholder': 'Введите отчество',
+            'autocomplete': 'off'
           }
         )
     )
     birthday = forms.DateField(
         label='День рождения',
         widget=DatePickerInput(
+            options={
+                    'format': 'DD-MM-YYYY',
+                    'locale': 'ru',
+                },
             attrs={
                 'class': 'form-control',
+                'autocomplete': 'off'
             }
         )
     )
@@ -230,6 +253,7 @@ class CreatePassportForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
+                'autocomplete': 'off'
             }
         )
     )
@@ -270,6 +294,7 @@ class CreatePayMethodList(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
+                'autocomplete': 'off'
             }
         )
     )
@@ -294,6 +319,7 @@ class CreatePayMethodForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
+                'autocomplete': 'off'
             }
         )
     )
@@ -302,6 +328,7 @@ class CreatePayMethodForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
+                'autocomplete': 'off'
             }
         )
     )
@@ -311,6 +338,7 @@ class CreatePayMethodForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
+                'autocomplete': 'off'
             }
         )
     )

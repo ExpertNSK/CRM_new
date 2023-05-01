@@ -92,7 +92,7 @@ class Loader(models.Model):
     )
     pay_method = models.OneToOneField(
         'loaders.PayMethod',
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         verbose_name='Метод расчета',
         related_name='pay_methods',
         blank=True,
@@ -100,7 +100,7 @@ class Loader(models.Model):
     )
     passport = models.OneToOneField(
         'loaders.Passport',
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name='passport',
         blank=True,
         null=True
@@ -197,7 +197,7 @@ class PayMethodList(models.Model):
 class PayMethod(models.Model):
     pay_method = models.ForeignKey(
         'loaders.PayMethodList',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name='methods',
         verbose_name='Платежный метод',
     )

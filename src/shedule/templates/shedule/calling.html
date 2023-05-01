@@ -62,16 +62,39 @@
           {% csrf_token %}
           <div class="modal-body table-responsive-xl">
             <input name="loader" type="number" value="{{ loader.id }}" hidden="true">
-            <select required="true" id="callstatus" class="form-select form-select-sm" name="call_status">
-              <option selected>Успешно</option>
-              <option>Не берет трубку</option>
-              <option>Телефон не доступен</option>
-              <option>Неправильный номер и/или Другой абонент</option>
-              <option>Занят телефон</option>
-              <option>Отказался работать на этой неделе</option>
-              <option>Не работает больше грузчиком</option>
-              <option>Нет желания работать с нами</option>
+            <select required="true" id="callstatus" class="form-select form-select-sm" name="call_status"
+              onchange="
+                if(this.value == /neg\d/){
+                  this.closest('[class=&quot;modal fade show&quot;]').querySelector('table').setAttribute('hidden', 'True')
+                }
+                if(this.value == 'busy'){
+                  this.closest('[class=&quot;modal fade show&quot;]').querySelector('table').setAttribute('hidden', 'True')
+                }
+                if(this.value == 'refusal'){
+                  this.closest('[class=&quot;modal fade show&quot;]').querySelector('table').setAttribute('hidden', 'True')
+                }
+                if(this.value == 'failed'){
+                  this.closest('[class=&quot;modal fade show&quot;]').querySelector('table').setAttribute('hidden', 'True')
+                  this.closest('[class=&quot;modal fade show&quot;]').querySelector('[class=&quot;form-group row my-3 p-3&quot;]').removeAttribute('hidden')
+                }
+              "
+            >
+              <option value=pos selected>Успешно</option>
+              <option value=busy>Занят телефон</option>
+              <option value=refusal>Отказался работать на этой неделе</option>
+              <option value=neg1>Не берет трубку</option>
+              <option value=neg2>Телефон не доступен</option>
+              <option value=neg3>Неправильный номер и/или Другой абонент</option>
+              <option value=neg4>Не работает больше грузчиком</option>
+              <option value=failed>Нет желания работать с нами</option>
             </select>
+            <div class="form-group row my-3 p-3" hidden>
+              <label for="{{ field.id_for_label }}">
+                Причина
+              </label>
+              <input class='form-control my-2' type="text" name="reason">
+            </div>
+            
             <table class="table table-bordered my-2">
               <thead>
                 <tr class="table-primary">
