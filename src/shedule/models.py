@@ -21,6 +21,9 @@ class WorkShedule(models.Model):
     class Meta:
         ordering = ['day']
         unique_together = ('loader', 'day')
+    
+    def __str__(self):
+        return f'{self.start_time} - {self.end_time}'
 
 
 class CallResult(models.Model):

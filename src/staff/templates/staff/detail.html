@@ -45,8 +45,14 @@
                         {{ form.email }}
                         <label class="form-label">Телефон:</label>
                         {{ form.phone }}
-                        <label class="form-label">Роль:</label>
-                        {{ form.role }}
+
+                        {% if user.is_admin %}
+                          <label class="form-label">Роль:</label>
+                          {{ form.role }}
+                        {% else %}
+                          <input type="text" name="role" value="{{ object.role }}" hidden>
+                        {% endif %}
+
                       </div>
                   </div>
                   <div class="modal-footer">

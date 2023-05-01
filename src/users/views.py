@@ -22,7 +22,7 @@ def login_view(request):
 
 class SignUp(CreateView):
     form_class = CustomUserCreationForm
-    success_url = reverse_lazy('staff:home')
+    success_url = reverse_lazy('staff:list')
     template_name = 'users/signup.html'
 
 

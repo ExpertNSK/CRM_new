@@ -7,15 +7,16 @@
     <div class="row">
       {% comment %} Панель управления {% endcomment %}
       <div class="d-grid gap-2 d-md-block my-2">
-        <button class="btn btn-primary" type="button">Button</button>
-        <button class="btn btn-primary" type="button">Button</button>
+        <a href="{% url 'shedule:calling' %}">
+          <button class="btn btn-primary btn-sm" type="button">Начать обзвон</button>
+        </a>
       </div>
     </div>
     <div class="row">
       {% comment %} Таблица график {% endcomment %}
       <table class="table table-bordered">
         <thead>
-          <tr class="table-success">
+          <tr class="table-primary">
             <th scope="col">Ф.И.О.:</th>
             {% for date in dates %}
               <th>{{ date }}</th>
@@ -24,18 +25,17 @@
         </thead>
         <tbody>
           {% for loader in loaders %}
+          <tr>
             <td>{{ loader }}</td>
-            
-            {% for workday in workdays|loader_filter:loader %}
-              
-              {% if workday.start_time %}
-                <td>{{ workday.start_time }} - {{ workday.end_time }}</td>
-              {% else %}
-                <td>Выходной</td>
-              {% endif %}
-                
+            {% for date in dates %}
+              {% with workdays|loader_filter:loader as workday %}
+                  {% if workday|get_day:date %}
+                    <td>{{ workday|get_day:date }}</td>
+                  {% else %}
+                    <td>Выходной</td>
+                  {% endif %}
+              {% endwith %}
             {% endfor %}
-              
           </tr>
           {% endfor %}
         </tbody>

@@ -13,6 +13,7 @@ urlpatterns = [
     path('detail/passport_add/<int:pk>', CreatePassportView.as_view(), name='passport_add'),
     path('detail/passport_edit/<int:pk>', UpdatePassportView.as_view(), name='passport_edit'),
     path('detail/pay_method_add/<int:pk>', CreatePayMethodView.as_view(), name='pay_method_fl_add'),
+    path('detail/pay_method_edit/<int:pk>', UpdatePayMethodView.as_view(), name='pay_method_fl_edit'),
     path('spec_add/', CreateSpecializationView.as_view(), name='spec_add'),
     path('spec_list/', ListSpecializationView.as_view(), name='spec_list'),
     path('spec_edit/<int:pk>/', EditSpecializationView.as_view(), name='spec_edit'),

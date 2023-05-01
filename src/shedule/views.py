@@ -4,7 +4,7 @@ from shedule.forms import UpdateWorkDayForm
 
 from shedule.models import CallResult, WorkShedule
 
-from .utils import check_callstatus, get_dates, get_loaders, workdays_bulk_update
+from .utils import check_callstatus, get_dates, get_loaders, workdays_create
 
 
 def shedule_view(request):
@@ -40,5 +40,5 @@ def calling(request):
         if not check_callstatus(request):
             pass
         else:
-            workdays_bulk_update(request, dates)
+            workdays_create(request, dates)
     return render(request, 'shedule/calling.html', context)

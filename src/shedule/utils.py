@@ -32,27 +32,6 @@ def get_dates(request=None, curr_week=False, next_week=False):
 def get_loaders(request=None):
     return Loader.objects.filter(is_active=True)
 
-
-def workdays_bulk_create(id):
-    today = dt.datetime.now()
-    dates = []
-    start_day = dt.datetime.strptime(
-        f'1/{today.month}/{today.year}',
-        '%d/%m/%Y'
-    )
-    while start_day.month == today.month:
-        dates.append(start_day)
-        start_day += dt.timedelta(days=1)
-    WorkShedule.objects.bulk_create(
-        WorkShedule(
-            loader=Loader.objects.get(id=id),
-            day=day,
-            start_time = None,
-            end_time=None
-        ) for day in dates
-    )
-
-
 def create_call_result(id):
     CallResult.objects.create(
         loader = Loader.objects.get(id=id),
@@ -62,7 +41,7 @@ def create_call_result(id):
         day_get_last_status = None
     )
 
-def workdays_bulk_update(request, dates):
+def workdays_create(request, dates):
     loader = request.POST.get('loader')
     start_times = request.POST.getlist('start_time')
     end_times = request.POST.getlist('end_time')
@@ -73,18 +52,23 @@ def workdays_bulk_update(request, dates):
             'end': end_times[i]
         }
     for i in range(len(shedule)):
+        day = dt.datetime.strptime(dates[i][:10], '%d/%m/%Y')
         if (
             not shedule[dates[i]]['start']
             or not shedule[dates[i]]['end']
         ):
-            continue
-        day = dt.datetime.strptime(dates[i][:10], '%d/%m/%Y')
-        WorkShedule.objects.filter(
+            WorkShedule.objects.filter(
             loader=Loader.objects.get(id=loader),
             day=day,
-        ).update(
-            start_time=shedule[dates[i]]['start'],
-            end_time=shedule[dates[i]]['end'],
+            ).delete()
+            continue
+        WorkShedule.objects.update_or_create(
+            loader=Loader.objects.get(id=loader),
+            day=day,
+            defaults={
+               'start_time': shedule[dates[i]]['start'],
+               'end_time': shedule[dates[i]]['end'], 
+            }
         )
 
 
@@ -94,12 +78,4 @@ def check_callstatus(request):
     object = CallResult.objects.filter(
         loader=loader
     )
-    if call_status in CALL_RESULTS_NEGATIVE:
-        if call_status == CALL_RESULTS_NEGATIVE[4]:
-            reason = request.POST.get('reason')
-            loader.update(is_active=False)
-            object.update(
-                date_last_call=dt.datetime.now()
-            )
-
     return True

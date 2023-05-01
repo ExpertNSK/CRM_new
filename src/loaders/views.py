@@ -7,7 +7,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 
 from loaders.models import Loader, Passport, PayMethod, PayMethodList, Specialization, Status
 from loaders.forms import CreateLoaderForm, CreatePassportForm, CreatePayMethodForm, CreatePayMethodList, CreateSpecializationForm, CreateStatusForm
-from shedule.utils import create_call_result, workdays_bulk_create
+from shedule.utils import create_call_result
 
 
 class ListLoaderView(LoginRequiredMixin, ListView):
@@ -23,7 +23,6 @@ class CreateLoaderView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_url = reverse_lazy('loaders:list')
 
     def get_success_url(self):
-        workdays_bulk_create(self.object.id)
         create_call_result(self.object.id)
         return reverse_lazy('loaders:detail', args=(self.object.id,))
 
@@ -92,10 +91,29 @@ class UpdatePassportView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     template_name = 'loaders/passport_edit.html'
     success_message = 'Паспортные данные успешно сохранены'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['loader'] = self.get_parent(self.request)
+        return context
+    
+    def get_parent(self, request):
+        return get_object_or_404(Loader, pk=self.kwargs['pk'])
+
     def get_object(self):
-        loader_id = self.kwargs['pk']
-        loader = Loader.objects.filter(id=loader_id).get()
+        loader = Loader.objects.filter(id=self.kwargs['pk']).get()
         return loader.passport
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            passport = form.save(commit=False)
+            passport.save()
+            return self.form_valid(form)
+        return self.form_invalid(form)
+    
+    def get_success_url(self) -> str:
+        return reverse_lazy('loaders:detail', kwargs={'pk': self.kwargs['pk']})
 
 
 class ListSpecializationView(LoginRequiredMixin, ListView):
@@ -193,3 +211,14 @@ class CreatePayMethodView(CreatePassportView):
             parent_obj.save()
             return self.form_valid(form)
         return self.form_invalid(form)
+
+
+class UpdatePayMethodView(UpdatePassportView):
+    model = PayMethod
+    form_class = CreatePayMethodForm
+    template_name = 'loaders/pay_method_edit.html'
+    success_message = 'Способ оплаты успешно сохранен'
+
+    def get_object(self):
+        loader = Loader.objects.filter(id=self.kwargs['pk']).get()
+        return loader.pay_method

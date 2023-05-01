@@ -6,14 +6,15 @@
     <h1>Обзвон</h1>
       <div class="row my-2">
         <div class="d-grid gap-2 d-md-block">
-          <button class="btn btn-primary" type="button">Button</button>
-          <button class="btn btn-primary" type="button">Button</button>
+          <a href="{% url 'shedule:shedule' %}">
+            <button class="btn btn-primary btn-sm" type="button">Завершить обзвон</button>
+          </a>
         </div>
       </div>
       <div class="row my-2">
         <table class="table table-bordered align-middle table-hover">
           <thead>
-            <tr class="table-success">
+            <tr class="table-primary">
               <th scope="col">Ф.И.О.</th>
               <th scope="col">Телефон</th>
               <th scope="col">Рейтинг</th>
@@ -59,7 +60,7 @@
         {{ form.media }}
         <form action="{% url 'shedule:calling' %}" method="post">
           {% csrf_token %}
-          <div class="modal-body">
+          <div class="modal-body table-responsive-xl">
             <input name="loader" type="number" value="{{ loader.id }}" hidden="true">
             <select required="true" id="callstatus" class="form-select form-select-sm" name="call_status">
               <option selected>Успешно</option>
@@ -73,7 +74,7 @@
             </select>
             <table class="table table-bordered my-2">
               <thead>
-                <tr class="table-success">
+                <tr class="table-primary">
                   <th>День</th>
                   {% for date in dates %}
                     <th> {{ date }}</th>
@@ -81,25 +82,29 @@
                 </tr>
                 <tr>
                   <th>Время начала дня</th>
-                  
-                    {% for date in dates %}
-                      <th>{{ form.start_time|start_day_id:date }}</th>
+                  {% for date in dates %}
+                    <th class="start">{{ form.start_time|start_day_id:date }}</th>
                   {% endfor %}
-                  
-                  
                 </tr>
                 <tr>
                   <th>Время завершения дня</th>
                   {% for date in dates %}
-                    <th>{{ form.end_time|end_day_id:date }}</th>
+                    <th class="end">{{ form.end_time|end_day_id:date }}</th>
                   {% endfor %}
                 </tr>
                 <tr>
                   <th>&nbsp;</th>
                   {% for date in dates %}
-                    <th><button type="button" class="btn btn-sm btn-dark" onclick="
-                      document.getElementById('start{{date}}').value='8:00'
-                      document.getElementById('end{{date}}').value='20:00'">Весь день</button></th>
+                    <th>
+                      <button type="button" class="btn btn-sm btn-danger" onclick="
+                        this.closest('[class=&quot;modal fade show&quot;]').querySelector('input[id=&quot;start{{date}}&quot;]').value=''
+                        this.closest('[class=&quot;modal fade show&quot;]').querySelector('input[id=&quot;end{{date}}&quot;]').value=''
+                        this.closest('[class=&quot;modal fade show&quot;]').querySelector('input[id=&quot;start{{date}}&quot;]').closest('[class=&quot;start&quot;]').querySelector('input[name=&quot;start_time&quot;]').value=''
+                        this.closest('[class=&quot;modal fade show&quot;]').querySelector('input[id=&quot;end{{date}}&quot;]').closest('[class=&quot;end&quot;]').querySelector('input[name=&quot;end_time&quot;]').value=''"
+                      >
+                          Выходной
+                      </button>
+                    </th>
                   {% endfor %}
                 </tr>
               </thead>
