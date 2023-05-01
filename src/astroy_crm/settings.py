@@ -17,9 +17,11 @@ ALLOWED_HOSTS = [ '192.168.1.123', '127.0.0.1']
 
 
 INSTALLED_APPS = [
-    "bootstrap_datepicker_plus",
+    'bootstrap_datepicker_plus',
+    'clients.apps.ClientsConfig',
     'core.apps.CoreConfig',
     'loaders.apps.LoadersConfig',
+    'sorl.thumbnail',
     'shedule.apps.SheduleConfig',
     'staff.apps.StaffConfig',
     'users.apps.UsersConfig',
@@ -29,7 +31,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'sorl.thumbnail',
 ]
 
 MIDDLEWARE = [
