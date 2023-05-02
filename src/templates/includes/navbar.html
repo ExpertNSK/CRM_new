@@ -21,7 +21,7 @@
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="{% url 'staff:list' %}">Офисный персонал</a></li>
               <li><a class="dropdown-item" href="{% url 'loaders:list' %}">Грузчики</a></li>
-              <li><a class="dropdown-item" href="#">Контрагенты</a></li>
+              <li><a class="dropdown-item" href="{% url 'clients:list' %}">Контрагенты</a></li>
               
               {% if user.is_admin %}
                 <li><a class="dropdown-item" href="{% url 'loaders:spec_list' %}">Специализации</a></li>

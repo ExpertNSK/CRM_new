@@ -21,7 +21,8 @@ class CreateClientForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
-                'autocomplete': 'off'
+                'autocomplete': 'off',
+                'placeholder': 'Введите полное наименование организации'
             }
         )
     )
@@ -31,12 +32,13 @@ class CreateClientForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
-                'autocomplete': 'off'
+                'autocomplete': 'off',
+                'placeholder': 'Введите удобное наименование для поиска организации'
             }
         )
     )
     specialization = forms.ModelMultipleChoiceField(
-        label='Специализация',
+        label='Вид работ для контрагента',
         queryset=Specialization.objects.all(),
         widget=forms.CheckboxSelectMultiple(
             attrs={
@@ -48,7 +50,9 @@ class CreateClientForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
-                'autocomplete': 'off'
+                'autocomplete': 'off',
+                'placeholder': 'Введите ИНН организации',
+                'data-mask': '000000000000',
             }
         )
     )
@@ -58,7 +62,9 @@ class CreateClientForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
-                'autocomplete': 'off'
+                'autocomplete': 'off',
+                'placeholder': 'Для юридических лиц',
+                'data-mask': '000000000',
             }
         )
     )
@@ -69,7 +75,8 @@ class CreateClientForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
-                'autocomplete': 'off'
+                'autocomplete': 'off',
+                'placeholder': 'В случае ИП – адрес места регистрации Предпринимателя'
             }
         )
     )
@@ -80,37 +87,41 @@ class CreateClientForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
-                'autocomplete': 'off'
+                'autocomplete': 'off',
+                'placeholder': 'Оставьте пустым, если совпадает с юридическим адресом'
             }
         )
     )
-    payment_account = forms.IntegerField(
-        label='Расчетный счет',
+    payment_account = forms.CharField(
+        label='Расчетный счет организации',
         required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
-                'autocomplete': 'off'
+                'autocomplete': 'off',
+                'data-mask': '00000000000000000000',
             }
         )
     )
-    correspondent_account = forms.IntegerField(
-        label='Корреспондентский счет',
+    correspondent_account = forms.CharField(
+        label='Корреспондентский счет банка',
         required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
-                'autocomplete': 'off'
+                'autocomplete': 'off',
+                'data-mask': '00000000000000000000',
             }
         )
     )
-    bik = forms.IntegerField(
-        label='БИК',
+    bik = forms.CharField(
+        label='БИК банка',
         required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
-                'autocomplete': 'off'
+                'autocomplete': 'off',
+                'data-mask': '000000000',
             }
         )
     )

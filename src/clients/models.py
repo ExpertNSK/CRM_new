@@ -25,12 +25,19 @@ class Client(models.Model):
         max_length=100,
         unique=True,
     )
-    inn = models.IntegerField(
+    specialization = models.ManyToManyField(
+        Specialization,
+        verbose_name='Специализация',
+        related_name='clsspecializations'
+    )
+    inn = models.CharField(
         verbose_name='ИНН',
+        max_length=12,
         unique=True,
     )
-    kpp = models.IntegerField(
+    kpp = models.CharField(
         verbose_name='КПП',
+        max_length=9,
         blank=True,
         null=True,
     )
@@ -46,18 +53,21 @@ class Client(models.Model):
         blank=True,
         null=True,
     )
-    payment_account = models.IntegerField(
+    payment_account = models.CharField(
         verbose_name='Расчетный счет',
+        max_length=20,
         blank=True,
         null=True,
     )
-    correspondent_account = models.IntegerField(
+    correspondent_account = models.CharField(
         verbose_name='Корреспондентский счет',
+        max_length=20,
         blank=True,
         null=True,
     )
-    bik = models.IntegerField(
+    bik = models.CharField(
         verbose_name='БИК',
+        max_length=9,
         blank=True,
         null=True,
     )
@@ -67,11 +77,7 @@ class Client(models.Model):
         blank=True,
         null=True,
     )
-    specialization = models.ManyToManyField(
-        Specialization,
-        verbose_name='Специализация',
-        related_name='clsspecializations'
-    )
+    
 
     class Meta:
         ordering = ['short_name']

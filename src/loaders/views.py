@@ -20,7 +20,6 @@ class CreateLoaderView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     form_class = CreateLoaderForm
     template_name = 'loaders/create.html'
     success_message = 'Профиль грузчика успешно добавлен'
-    success_url = reverse_lazy('loaders:list')
 
     def get_success_url(self):
         create_call_result(self.object.id)
