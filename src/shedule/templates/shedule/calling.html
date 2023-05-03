@@ -26,15 +26,15 @@
           </thead>
           <tbody>
             {% for loader in loaders %}
-              <tr class="clickable-row" data-bs-toggle="modal" data-bs-target="#editNextWeek{{loader.id}}">
+              {% for call_result in call_results|loader_filter:loader  %}
+              <tr class="clickable-row {% if call_result.date_last_call == today %} table-success {% else %} table-danger {% endif %}" data-bs-toggle="modal" data-bs-target="#editNextWeek{{loader.id}}">
+              {% endfor %}
                 <th scope="row">{{ loader }}</th>
                 <td>{{ loader.phone }}</td>
                 <td>{{ loader.rating }}</td>
                 <td>{{ loader.status }}</td>
                 <td>{% for spc in loader.specialization.all %} {{ spc }}<br> {% endfor %}</td>
-                
                 {% for call_result in call_results|loader_filter:loader %}
-                  
                   {% if call_result.date_last_call %}
                     <td>{{ call_result.date_last_call }}</td>
                     <td>{{ call_result.last_call_result }}</td>
@@ -64,7 +64,16 @@
             <input name="loader" type="number" value="{{ loader.id }}" hidden="true">
             <select required="true" id="callstatus" class="form-select form-select-sm" name="call_status"
               onchange="
-                if(this.value == /neg\d/){
+                if(this.value == 'neg1'){
+                  this.closest('[class=&quot;modal fade show&quot;]').querySelector('table').setAttribute('hidden', 'True')
+                }
+                if(this.value == 'neg2'){
+                  this.closest('[class=&quot;modal fade show&quot;]').querySelector('table').setAttribute('hidden', 'True')
+                }
+                if(this.value == 'neg3'){
+                  this.closest('[class=&quot;modal fade show&quot;]').querySelector('table').setAttribute('hidden', 'True')
+                }
+                if(this.value == 'neg4'){
                   this.closest('[class=&quot;modal fade show&quot;]').querySelector('table').setAttribute('hidden', 'True')
                 }
                 if(this.value == 'busy'){

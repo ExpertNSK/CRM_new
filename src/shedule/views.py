@@ -31,12 +31,14 @@ def calling(request):
     loaders = get_loaders()
     call_results = CallResult.objects.all()
     dates, _ = get_dates(curr_week=True)
+    today = dt.datetime.now().date
     context = {
         'loaders': loaders,
         'call_results': call_results,
         'dates': dates,
         'form': form,
         'call_statuses': CALL_RESULTS_NEGATIVE,
+        'today': today,
     }
     if request.method == 'POST':
         print(request.POST)
