@@ -10,6 +10,9 @@ TYPES_CLIENTS = [
 
 
 class Client(models.Model):
+    is_active = models.BooleanField(
+        default=True,
+    )
     type = models.CharField(
         verbose_name='Тип контрагента',
         choices=TYPES_CLIENTS,

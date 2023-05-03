@@ -141,3 +141,6 @@ class CreateClientForm(forms.ModelForm):
         fields = (
             '__all__'
         )
+        exclude = (
+            'is_active',
+        )
