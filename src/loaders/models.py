@@ -216,6 +216,9 @@ class PayMethod(models.Model):
         null=True,
     )
 
+    def __str__(self):
+        return f'{self.pay_method}'
+
 
 class Status(models.Model):
     status = models.CharField(

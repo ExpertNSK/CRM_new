@@ -30,7 +30,7 @@ def calling(request):
     form = UpdateWorkDayForm
     loaders = get_loaders()
     call_results = CallResult.objects.all()
-    dates, _ = get_dates(curr_week=True)
+    dates, _ = get_dates(next_week=True)
     today = dt.datetime.now().date
     context = {
         'loaders': loaders,

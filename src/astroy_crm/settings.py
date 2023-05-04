@@ -1,5 +1,4 @@
 import os
-import datetime as dt
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -21,6 +20,7 @@ INSTALLED_APPS = [
     'clients.apps.ClientsConfig',
     'core.apps.CoreConfig',
     'loaders.apps.LoadersConfig',
+    'orders.apps.OrdersConfig',
     'sorl.thumbnail',
     'shedule.apps.SheduleConfig',
     'staff.apps.StaffConfig',

@@ -25,15 +25,28 @@
           </div>
           <div class="card-footer">
             <div class="d-grid gap-2 col-6 mx-auto mb-1">
-              <button type="submit" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editClient">Редактировать</button>
+              <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editClient">Редактировать</button>
             </div>
             <div class="d-grid gap-2 col-6 mx-auto mb-1">
-              <button type="submit" class="btn btn-sm btn-primary" onclick="window.location.href='/clients/list/'">Закрыть</button>
+              <button type="button" class="btn btn-sm btn-primary" onclick="window.location.href='/clients/list/'">Закрыть</button>
             </div>
             {% if user.is_admin %}
             <div class="d-grid gap-2 col-6 mx-auto mb-1">
-              <button type="submit" class="btn btn-sm btn-danger" onclick="window.location.href='/clients/delete/{{ object.id }}/'">Удалить</button>
+              <button type="button" class="btn btn-sm btn-danger" onclick="myFunction()">Удалить</button>
             </div>
+            <script>
+              function myFunction()
+              {
+              if (confirm("Вы действительно хотите удалить \"{{ object }}\"?"))
+                {
+                  window.location.href='/clients/delete/{{ object.id }}/';
+                }
+              else
+                {
+                  return False;
+                }
+              }
+            </script>
             {% endif %}
           </div>
       </div>
