@@ -9,7 +9,7 @@
       {% if user.is_authenticated %}
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Заявки</a>
+            <a class="nav-link active" aria-current="page" href="{% url 'orders:list' %}">Заявки</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'shedule:shedule' %}">График</a>

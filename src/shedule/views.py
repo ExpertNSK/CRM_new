@@ -1,5 +1,6 @@
 import datetime as dt
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from shedule.forms import UpdateWorkDayForm
 from shedule.lists import CALL_RESULTS_NEGATIVE
 
@@ -8,6 +9,7 @@ from shedule.models import CallResult, WorkShedule
 from .utils import check_callstatus, get_dates, get_loaders, workdays_create
 
 
+@login_required
 def shedule_view(request):
     dates, date_filter = get_dates(curr_week=True)
     loaders = get_loaders()
@@ -25,12 +27,12 @@ def shedule_view(request):
     }
     return render(request, 'shedule/shedule.html', context)
 
-
+@login_required
 def calling(request):
     form = UpdateWorkDayForm
     loaders = get_loaders()
     call_results = CallResult.objects.all()
-    dates, _ = get_dates(next_week=True)
+    dates, _ = get_dates(curr_week=True)
     today = dt.datetime.now().date
     context = {
         'loaders': loaders,

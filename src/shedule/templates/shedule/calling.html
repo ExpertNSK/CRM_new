@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="row my-2">
-        <table class="table table-bordered align-middle table-hover">
+        <table class="table table-hover align-middle">
           <thead>
             <tr class="table-primary">
               <th scope="col">Ф.И.О.</th>
@@ -29,7 +29,7 @@
               {% for call_result in call_results|loader_filter:loader  %}
               <tr class="clickable-row {% if call_result.date_last_call == today %} table-success {% else %} table-danger {% endif %}" data-bs-toggle="modal" data-bs-target="#editNextWeek{{loader.id}}">
               {% endfor %}
-                <th scope="row">{{ loader }}</th>
+                <td scope="row">{{ loader }}</td>
                 <td>{{ loader.phone }}</td>
                 <td>{{ loader.rating }}</td>
                 <td>{{ loader.status }}</td>
