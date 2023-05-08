@@ -7,7 +7,7 @@ from orders.forms import CreateOrderForm
 from orders.models import Order
 
 
-class OrdersListView(ListView):
+class OrdersListView(LoginRequiredMixin, ListView):
     queryset = Order.objects.all()
     template_name = 'orders/list.html'
 
