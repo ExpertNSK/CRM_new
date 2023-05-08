@@ -10,7 +10,7 @@ load_dotenv(DOTENV_PATH)
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [ '192.168.1.123', '127.0.0.1', '91.200.84.186']
 
