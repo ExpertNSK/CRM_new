@@ -1,0 +1,38 @@
+{% load thumbnail %}
+<div class="modal fade" id="showPassport" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="card" >
+        <div class="row g-0">
+          <div class="col-md-4">
+            {% thumbnail object.passport.photo_main_page "400x300" crop="center" upscale=True as img %}
+              <img src="{{ img.url }}" class="img-thumbnail rounded-start my-2 mx-2">
+            {% endthumbnail %}
+            {% thumbnail object.passport.photo_registration "400x300" crop="center" upscale=True as img %}
+              <img src="{{ img.url }}" class="img-thumbnail rounded-start my-2 mx-2">
+            {% endthumbnail %}
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <div class="row" id="passportData">
+                <p class="card-text"><strong>Серия номер: </strong>{{ object.passport.serial_number }}</p>
+                <p class="card-text"><strong>Кем выдан: </strong>{{ object.passport.issued_by }}</p>
+                <p class="card-text"><strong>Код подразделения: </strong>{{ object.passport.division_code }}</p>
+                <p class="card-text"><strong>Дата выдачи: </strong>{{ object.passport.date_of_issue }}</p>
+                <p class="card-text"><strong>Ф.И.О: </strong>{{ object.passport.last_name }} {{ object.passport.first_name }} {{ object.passport.middle_name }}</p>
+                <p class="card-text"><strong>Дата рождения: </strong>{{ object.passport.birthday }}</p>
+                <p class="card-text"><strong>Место рождения: </strong>{{ object.passport.place_of_birth }}</p>
+              </div>
+              <div class="d-grid gap-2 col-11 mx-auto my-2">
+                {% if user.is_admin %}
+                  <button type="submit" class="btn btn-sm btn-primary" data-bs-target="#editPassport" data-bs-toggle="modal" >Редактировать данные</button>
+                {% endif %}
+                  <button type="submit" class="btn btn-sm btn-primary" data-bs-dismiss="modal">Закрыть</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

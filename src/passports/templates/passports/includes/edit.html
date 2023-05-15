@@ -1,0 +1,80 @@
+{% load thumbnail %}
+<div class="modal fade" id="editPassport" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            {{ passport_form.media }}
+            {% csrf_token %}
+            {{ passport_form }}
+            <input type="hidden" id="pid" value="{{ object.passport.id }}">
+          </div>
+          <div class="d-grid gap-2 mx-auto my-2">
+              <button type="button" class="btn btn-sm btn-primary" id="btnsave" data-bs-target="#showPassport" data-bs-toggle="modal">Сохранить</button>
+              <button type="button" class="btn btn-sm btn-danger" data-bs-target="#showPassport" data-bs-toggle="modal">Отменить</button>
+          </div>
+            <script>
+              $('#btnsave').click(function(){
+                console.log("Button Save Clicked")
+
+                let output = "";
+                let token = $('[name="csrfmiddlewaretoken"]').val();
+                let pid = $('#pid').val();
+                let serial_number = $('#id_serial_number').val();
+                let issued_by = $('#id_issued_by').val();
+                let division_code = $('#id_division_code').val();
+                let date_of_issue = $('#id_date_of_issue').val();
+                let last_name = $('#id_last_name').val();
+                let first_name = $('#id_first_name').val();
+                let middle_name = $('#id_middle_name').val();
+                let birthday = $('#id_birthday').val();
+                let place_of_birth = $('#id_place_of_birth').val();
+                let photo_main_page = $('#id_photo_main_page').val();
+                let photo_registration = $('#id_photo_registration').val();
+
+                data = {
+                  csrfmiddlewaretoken: token,
+                  pid: pid,
+                  serial_number: serial_number,
+                  issued_by: issued_by,
+                  division_code: division_code,
+                  date_of_issue: date_of_issue,
+                  last_name: last_name,
+                  first_name: first_name,
+                  middle_name: middle_name,
+                  birthday: birthday,
+                  place_of_birth: place_of_birth,
+                  photo_main_page: photo_main_page,
+                  photo_registration: photo_registration
+                }
+                
+                $.ajax({
+                  url: "{% url 'passports:edit' %}",
+                  method: "POST",
+                  data: data,
+
+                  success:function(data){
+                    pd = data.passport_data
+                    console.log(pd)
+                    if(data.status == 'OK'){
+                      output += "<p class='card-text'><strong>Серия номер: </strong>" + pd.serial_number + "</p>" +
+                      "<p class='card-text'><strong>Кем выдан: </strong>" + pd.issued_by + "</p>" +
+                      "<p class='card-text'><strong>Код подразделения: </strong>" + pd.division_code + "</p>" +
+                      "<p class='card-text'><strong>Дата выдачи: </strong>" + pd.date_of_issue + "</p>" +
+                      "<p class='card-text'><strong>Ф.И.О: </strong>" + pd.last_name + " " + pd.first_name + " " + pd.middle_name + "</p>" +
+                      "<p class='card-text'><strong>Дата рождения: </strong>" + pd.birthday + "</p>" +
+                      "<p class='card-text'><strong>Место рождения: </strong>" + pd.place_of_birth + "</p>"
+                    }
+                    $('#passportData').html(output)
+                  }
+                })
+              })
+            </script>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>

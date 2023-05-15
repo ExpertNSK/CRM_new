@@ -10,7 +10,7 @@ load_dotenv(DOTENV_PATH)
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [ '192.168.1.123', '127.0.0.1', '91.200.84.186', 'astroy.ddns.net']
 
@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'loaders.apps.LoadersConfig',
     'orders.apps.OrdersConfig',
+    'passports.apps.PassportsConfig',
     'sorl.thumbnail',
     'shedule.apps.SheduleConfig',
     'staff.apps.StaffConfig',
@@ -64,10 +65,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'astroy_crm.wsgi.application'
 
-DATABASES = {
+if DEBUG:
+    DATABASES = {
+    'default': {
+        'ENGINE':'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3'
+    }
+}
+else:
+    DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
-        'NAME': os.getenv('DB_NAME', (BASE_DIR / 'db.sqlite3')),
+        'NAME': os.getenv('DB_NAME', 'db.sqlite3'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),

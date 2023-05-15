@@ -27,7 +27,7 @@
             {% endfor %}
           {% endif %}
           {{ form.media }}
-            <form method="post" action="{% url 'loaders:passport_add' pk=loader.id %}" enctype="multipart/form-data">
+            <form method="post" action="{% url 'passports:create' pk %}" enctype="multipart/form-data">
               {% csrf_token %}
               {% for field in form %}
               <div class="form-group row my-3 p-3">

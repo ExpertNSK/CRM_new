@@ -1,12 +1,14 @@
+from typing import Any, Dict
 from django.contrib import messages
-from django.shortcuts import get_object_or_404
+from django.http import HttpRequest, HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
-from loaders.models import Loader, Passport, PayMethod, PayMethodList, Specialization, Status
-from loaders.forms import CreateLoaderForm, CreatePassportForm, CreatePayMethodForm, CreatePayMethodList, CreateSpecializationForm, CreateStatusForm
+from passports.forms import PassportForm
+from loaders.models import Loader, PayMethod, PayMethodList, Specialization, Status
+from loaders.forms import CreateLoaderForm, CreatePayMethodForm, CreatePayMethodList, CreateSpecializationForm, CreateStatusForm
 from shedule.utils import create_call_result
 
 
@@ -19,100 +21,30 @@ class CreateLoaderView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Loader
     form_class = CreateLoaderForm
     template_name = 'loaders/create.html'
-    success_message = 'Профиль грузчика успешно добавлен'
+    success_message = 'Профиль успешно добавлен'
 
     def get_success_url(self):
         create_call_result(self.object.id)
         return reverse_lazy('loaders:detail', args=(self.object.id,))
 
 
-class DetailUpdateLoaderViewSet(LoginRequiredMixin, SuccessMessageMixin, DetailView, UpdateView):
+class DetailLoaderView(LoginRequiredMixin, DetailView):
+    model = Loader
+    template_name = 'loaders/detail.html'
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['form'] = CreateLoaderForm(instance=self.get_object())
+        return context
+
+
+class UpdateLoaderView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Loader
     form_class = CreateLoaderForm
-    template_name = 'loaders/detail.html'
-    success_message = 'Профиль грузчика успешно сохранен'
+    success_message = 'Профиль успешно сохранен!'
 
-    def get_success_url(self):
-        return reverse_lazy('loaders:detail', args=(self.object.id,))
-    
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        passport_form = CreatePassportForm(request.GET or None)
-        context = self.get_context_data(object=self.object)
-        context['passport_form'] = passport_form
-        return super().get(request, *args, **kwargs)
-    
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        form = self.get_form()
-        passport_form = CreatePassportForm(request.POST or None)
-        if passport_form.is_valid():
-            passport = passport_form.save()
-            passport.save()
-        if form.is_valid():
-            form.save()
-        return super().get(request, *args, **kwargs)
-
-
-class CreatePassportView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
-    model = Passport
-    parent_model = Loader
-    form_class = CreatePassportForm
-    template_name = 'loaders/passport_add.html'
-    success_message = 'Паспортные данные успешно сохранены'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['loader'] = self.get_parent(self.request)
-        return context
-
-    def get_parent(self, request):
-        return get_object_or_404(self.parent_model, pk=self.kwargs['pk'])
-    
-    def post(self, request, *args, **kwargs):
-        parent_obj = self.get_parent(request)
-        form = self.get_form()
-        if form.is_valid():
-            passport = form.save(commit=False)
-            passport.save()
-            parent_obj.passport = passport
-            parent_obj.save()
-            return self.form_valid(form)
-        return self.form_invalid(form)
-    
     def get_success_url(self) -> str:
-        return reverse_lazy('loaders:detail', kwargs={'pk': self.kwargs['pk']})
-
-
-class UpdatePassportView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
-    model = Passport
-    form_class = CreatePassportForm
-    template_name = 'loaders/passport_edit.html'
-    success_message = 'Паспортные данные успешно сохранены'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['loader'] = self.get_parent(self.request)
-        return context
-    
-    def get_parent(self, request):
-        return get_object_or_404(Loader, pk=self.kwargs['pk'])
-
-    def get_object(self):
-        loader = Loader.objects.filter(id=self.kwargs['pk']).get()
-        return loader.passport
-    
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        form = self.get_form()
-        if form.is_valid():
-            passport = form.save(commit=False)
-            passport.save()
-            return self.form_valid(form)
-        return self.form_invalid(form)
-    
-    def get_success_url(self) -> str:
-        return reverse_lazy('loaders:detail', kwargs={'pk': self.kwargs['pk']})
+        return reverse_lazy('loaders:detail', kwargs={'pk': self.object.id})
 
 
 class ListSpecializationView(LoginRequiredMixin, ListView):
@@ -193,31 +125,31 @@ class DeletePayMethodListView(LoginRequiredMixin, DeleteView):
         return self.post(request, *args, **kwargs)
 
 
-class CreatePayMethodView(CreatePassportView):
-    model = PayMethod
-    parent_model = Loader
-    form_class = CreatePayMethodForm
-    template_name = 'loaders/pay_method_add.html'
-    success_message = 'Способ оплаты успешно сохранен'
+# class CreatePayMethodView(CreatePassportView):
+#     model = PayMethod
+#     parent_model = Loader
+#     form_class = CreatePayMethodForm
+#     template_name = 'loaders/pay_method_add.html'
+#     success_message = 'Способ оплаты успешно сохранен'
     
-    def post(self, request, *args, **kwargs):
-        parent_obj = self.get_parent(request)
-        form = self.get_form()
-        if form.is_valid():
-            pm = form.save(commit=False)
-            pm.save()
-            parent_obj.pay_method = pm
-            parent_obj.save()
-            return self.form_valid(form)
-        return self.form_invalid(form)
+#     def post(self, request, *args, **kwargs):
+#         parent_obj = self.get_parent(request)
+#         form = self.get_form()
+#         if form.is_valid():
+#             pm = form.save(commit=False)
+#             pm.save()
+#             parent_obj.pay_method = pm
+#             parent_obj.save()
+#             return self.form_valid(form)
+#         return self.form_invalid(form)
 
 
-class UpdatePayMethodView(UpdatePassportView):
-    model = PayMethod
-    form_class = CreatePayMethodForm
-    template_name = 'loaders/pay_method_edit.html'
-    success_message = 'Способ оплаты успешно сохранен'
+# class UpdatePayMethodView(UpdatePassportView):
+#     model = PayMethod
+#     form_class = CreatePayMethodForm
+#     template_name = 'loaders/pay_method_edit.html'
+#     success_message = 'Способ оплаты успешно сохранен'
 
-    def get_object(self):
-        loader = Loader.objects.filter(id=self.kwargs['pk']).get()
-        return loader.pay_method
+#     def get_object(self):
+#         loader = Loader.objects.filter(id=self.kwargs['pk']).get()
+#         return loader.pay_method

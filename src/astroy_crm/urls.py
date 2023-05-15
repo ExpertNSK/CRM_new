@@ -11,6 +11,7 @@ urlpatterns = [
     path('orders/', include('orders.urls', namespace='orders')),
     path('clients/', include('clients.urls', namespace='clients')),
     path('loaders/', include('loaders.urls', namespace='loaders')),
+    path('passports/', include('passports.urls', namespace='passports')),
     path('shedule/', include('shedule.urls', namespace='shedule')),
     path('staff/', include('staff.urls', namespace='staff')),
     path('users/', include('users.urls', namespace='users')),
