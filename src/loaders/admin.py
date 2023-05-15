@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Loader, PayMethod
+from .models import Loader
 
 @admin.register(Loader)
 class LoaderAdmin(admin.ModelAdmin):
@@ -31,8 +31,3 @@ class LoaderAdmin(admin.ModelAdmin):
 
     def user(self, obj):
         return obj
-
-
-@admin.register(PayMethod)
-class PayMethodAdmin(admin.ModelAdmin):
-    list_display = ['pay_method', ]

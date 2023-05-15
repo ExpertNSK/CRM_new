@@ -7,7 +7,9 @@
           <div class="row">
             {{ passport_form.media }}
             {% csrf_token %}
-            {{ passport_form }}
+            <form>
+              {{ passport_form }}
+            </form>
             <input type="hidden" id="pid" value="{{ object.passport.id }}">
           </div>
           <div class="d-grid gap-2 mx-auto my-2">
@@ -15,10 +17,23 @@
               <button type="button" class="btn btn-sm btn-danger" data-bs-target="#showPassport" data-bs-toggle="modal">Отменить</button>
           </div>
             <script>
-              $('#btnsave').click(function(){
-                console.log("Button Save Clicked")
+              let files;
+              let photo_main_page = '';
+              let photo_registration = '';
 
+              $('#id_photo_main_page').on('change', prepareUploadPhotoMainPage);
+              $('#id_photo_registration').on('change', prepareUploadPhotoRegistration);
+
+              function prepareUploadPhotoMainPage(event) {
+                photo_main_page = event.target.files;
+              }
+              function prepareUploadPhotoRegistration(event) {
+                photo_registration = event.target.files;
+              }
+
+              $('#btnsave').click(function(){
                 let output = "";
+                let outputPhotos = "";
                 let token = $('[name="csrfmiddlewaretoken"]').val();
                 let pid = $('#pid').val();
                 let serial_number = $('#id_serial_number').val();
@@ -30,34 +45,39 @@
                 let middle_name = $('#id_middle_name').val();
                 let birthday = $('#id_birthday').val();
                 let place_of_birth = $('#id_place_of_birth').val();
-                let photo_main_page = $('#id_photo_main_page').val();
-                let photo_registration = $('#id_photo_registration').val();
 
-                data = {
-                  csrfmiddlewaretoken: token,
-                  pid: pid,
-                  serial_number: serial_number,
-                  issued_by: issued_by,
-                  division_code: division_code,
-                  date_of_issue: date_of_issue,
-                  last_name: last_name,
-                  first_name: first_name,
-                  middle_name: middle_name,
-                  birthday: birthday,
-                  place_of_birth: place_of_birth,
-                  photo_main_page: photo_main_page,
-                  photo_registration: photo_registration
-                }
+                let formData = new FormData();
+                formData.append('pid', pid)
+                formData.append('serial_number', serial_number)
+                formData.append('issued_by', issued_by)
+                formData.append('division_code', division_code)
+                formData.append('date_of_issue', date_of_issue)
+                formData.append('last_name', last_name)
+                formData.append('first_name', first_name)
+                formData.append('middle_name', middle_name)
+                formData.append('birthday', birthday)
+                formData.append('place_of_birth', place_of_birth)
+                formData.append('photo_main_page', photo_main_page[0])
+                formData.append('photo_registration', photo_registration[0])
                 
                 $.ajax({
                   url: "{% url 'passports:edit' %}",
                   method: "POST",
-                  data: data,
+                  data: formData,
+                  contentType: false,
+                  processData: false,
 
                   success:function(data){
-                    pd = data.passport_data
-                    console.log(pd)
+                    pd = data.passport_data;
                     if(data.status == 'OK'){
+                      outputPhotos += (
+                        "{% thumbnail 'media/" + pd.photo_main_page + "' '400x300' crop='center' upscale=True as img %}" +
+                        "<img src='{{ img }}' class='img-thumbnail rounded-start my-2 mx-2'>" +
+                        "{% endthumbnail %}" +
+                        "{% thumbnail '/media/" + pd.photo_registration + "' '400x300' crop='center' upscale=True as img %}" +
+                        "<img src='{{ img.url }}' class='img-thumbnail rounded-start my-2 mx-2'>" +
+                        "{% endthumbnail %}"
+                      )
                       output += "<p class='card-text'><strong>Серия номер: </strong>" + pd.serial_number + "</p>" +
                       "<p class='card-text'><strong>Кем выдан: </strong>" + pd.issued_by + "</p>" +
                       "<p class='card-text'><strong>Код подразделения: </strong>" + pd.division_code + "</p>" +
@@ -65,8 +85,9 @@
                       "<p class='card-text'><strong>Ф.И.О: </strong>" + pd.last_name + " " + pd.first_name + " " + pd.middle_name + "</p>" +
                       "<p class='card-text'><strong>Дата рождения: </strong>" + pd.birthday + "</p>" +
                       "<p class='card-text'><strong>Место рождения: </strong>" + pd.place_of_birth + "</p>"
-                    }
-                    $('#passportData').html(output)
+                    };
+                    $('#passportPhotos').html(outputPhotos);
+                    $('#passportData').html(output);
                   }
                 })
               })

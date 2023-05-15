@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'loaders.apps.LoadersConfig',
     'orders.apps.OrdersConfig',
     'passports.apps.PassportsConfig',
+    'paymethods.apps.PaymethodsConfig',
     'sorl.thumbnail',
     'shedule.apps.SheduleConfig',
     'staff.apps.StaffConfig',
