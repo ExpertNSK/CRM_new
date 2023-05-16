@@ -35,8 +35,13 @@
                   {% if field.field.required %}
                     <span class="required text-danger">*</span>
                   {% endif %}
-                </label>    
+                </label>  
                 {{ field }}
+                {% if field.label == 'Способ оплаты' %}
+                  <div class="col-12">
+                    <input type="button" class="btn btn-sm col-1 btn-secondary my-1 float-end" id="btnAdd" data-bs-toggle="modal" data-bs-target="#addPaymentType" value="Добавить">
+                  </div>
+                {% endif %}
                 </div>
               {% endfor %}
               <div class="col-md-6 offset-md-4">
@@ -49,6 +54,55 @@
         </div>
       </div>
   </div>
+  <div class="modal fade" id="addPaymentType" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Добавить способ оплаты</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          {{ payment_type_form.as_p }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+          <button type="button" class="btn btn-primary" id="btn-add">Добавить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $('#btn-add').click(function(){
+      let output = '<option value="" selected="">---------</option> ';
+      let paymentType = $('#payment_type').val();
+      data = {'payment_type': paymentType};
+      if(paymentType == ''){
+        console.log('Payment Type is Empty! Please Enter Payment Type!');
+      }else{
+        $.ajax({
+          url: "{% url 'paymethods:pmtype_add' %}",
+          method: 'POST',
+          data: data,
+
+          success:function(data){
+            x = data.payment_types;
+            if(data.status == 'OK'){
+              console.log(x)
+              for(i=0; i<x.length; i++){
+                output += (
+                  "<option value='" + x[i].id + "'>" + x[i].payment_type + "</option> "
+                )
+              }
+              console.log(output)
+              document.querySelector('div[class="modal fade show"]').setAttribute('class', 'modal fade');
+              document.querySelector('div[class="modal-backdrop fade show"]').setAttribute('class', 'modal-backdrop fade');
+              $('#id_payment_type').html(output);
+            }
+          }
+        })
+      }
+    })
+  </script>
 {% endblock content %}
     
     

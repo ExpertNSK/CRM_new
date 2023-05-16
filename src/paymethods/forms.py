@@ -9,7 +9,8 @@ class PaymentTypeForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
-                'autocomplete': 'off'
+                'autocomplete': 'off',
+                'id': 'payment_type'
             }
         )
     )
