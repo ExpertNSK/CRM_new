@@ -28,7 +28,12 @@
               <button type="submit" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#showPassport">Показать паспортные данные</button>
             {% endif %}
             {% if not object.pay_method %}
-              <button type="submit" class="btn btn-sm btn-danger" onclick="window.location.href='/loaders/detail/pay_method_add/{{ object.pk }}'">Добавить платежные данные</button>
+              <input type="submit" class="btn btn-sm btn-danger" id="btnPayMethodAdd" value="Добавить платежные данные">
+              <script>
+                $('#btnPayMethodAdd').click(function(){
+                  window.location = "{% url 'paymethods:create' object.id %}"
+                })
+              </script>
             {% else %}
               <button type="submit" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#showPayMethod">Показать платежные данные</button>
             {% endif %}

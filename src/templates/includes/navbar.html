@@ -26,7 +26,7 @@
               {% if user.is_admin %}
                 <li><a class="dropdown-item" href="{% url 'loaders:spec_list' %}">Специализации</a></li>
                 <li><a class="dropdown-item" href="{% url 'loaders:status_list' %}">Статусы работы</a></li>
-                <li><a class="dropdown-item" href="{% url 'loaders:pay_method_list' %}">Способы оплаты</a></li>
+                <li><a class="dropdown-item" href="{% url 'paymethods:list' %}">Способы оплаты</a></li>
               {% endif %}
                 
               

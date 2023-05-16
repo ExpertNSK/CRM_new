@@ -31,12 +31,6 @@ class Order(models.Model):
         blank=True,
         null=True
     )
-    pay_method = models.ForeignKey(
-        'loaders.PayMethodList',
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True
-    )
     description_internal = models.TextField(
         'Внутреннее описание заявки',
         blank=True,

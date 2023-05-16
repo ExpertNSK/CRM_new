@@ -3,7 +3,7 @@ from django import forms
 from .models import PayMethod, PaymentType
 
 
-class CreatePaymentType(forms.ModelForm):
+class PaymentTypeForm(forms.ModelForm):
     payment_type = forms.CharField(
         label='Способ оплаты',
         widget=forms.TextInput(
@@ -16,11 +16,11 @@ class CreatePaymentType(forms.ModelForm):
 
     class Meta:
         model = PaymentType
-        fields = ('pay_method', )
+        fields = ('payment_type', )
 
 
-class CreatePayMethodForm(forms.ModelForm):
-    pay_method = forms.ModelChoiceField(
+class PayMethodForm(forms.ModelForm):
+    payment_type = forms.ModelChoiceField(
         label='Способ оплаты',
         queryset=PaymentType.objects.all(),
         widget=forms.Select(
@@ -60,5 +60,5 @@ class CreatePayMethodForm(forms.ModelForm):
 
     class Meta:
         model = PayMethod
-        fields = ('pay_method', 'requisites', 'bank', 'comments', )
+        fields = ('payment_type', 'requisites', 'bank', 'comments', )
 

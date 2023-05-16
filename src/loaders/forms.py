@@ -1,6 +1,6 @@
 from django import forms
 
-from loaders.models import AREA_OF_RESIDENTS, Loader, PayMethod, PayMethodList, Specialization, Status
+from loaders.models import AREA_OF_RESIDENTS, Loader, Specialization, Status
 from users.models import CustomUser
 
 

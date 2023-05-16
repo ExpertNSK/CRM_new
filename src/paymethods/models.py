@@ -9,7 +9,7 @@ class PaymentType(models.Model):
     )
 
     def __str__(self):
-        return self.pay_method
+        return self.payment_type
 
 
 class PayMethod(models.Model):
@@ -35,4 +35,4 @@ class PayMethod(models.Model):
     )
 
     def __str__(self):
-        return f'{self.pay_method}'
+        return f'{self.payment_type}'

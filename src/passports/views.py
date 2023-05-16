@@ -20,7 +20,7 @@ def create_passport(request, pk):
             passport = form.save(commit=False)
             passport.save()
             Loader.objects.filter(pk=pk).update(
-                passport = passport
+                passport=passport
             )
             return redirect('loaders:detail', pk=pk)
         return render(request, 'passports/create.html', context)

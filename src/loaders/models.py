@@ -91,7 +91,7 @@ class Loader(models.Model):
         null=True,
     )
     pay_method = models.OneToOneField(
-        'loaders.PayMethod',
+        'paymethods.PayMethod',
         on_delete=models.SET_NULL,
         verbose_name='Метод расчета',
         related_name='pay_methods',
