@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+  <div class="container-fluid my-5">
+    <div class="row">
+      <div class="col-1"></div>
+      <div class="col-3">
+        {% for field in form %}
+          <div class="h5">Добавить специализацию:</div>
+          {{ field }}
+          <input type="hidden" id="pid" value="">
+        {% endfor %}
+        <div class="float-end my-1">
+          <input type="button" class="btn btn-sm btn-success" id="btn-add" value="Добавить">
+        </div>
+      </div>
+      <div class="col-1"></div>
+      <div class="col-5">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Специализации</th>
+              <td>&nbsp;</td>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            {% for obj in object_list %}
+              <tr>
+                <td>{{ obj }}</td>
+                <td>
+                  <div class="float-end">
+                    <input type="button" class="btn btn-sm btn-warning btn-edit" data-pid="{{ obj.id }}" value="Изменить">
+                    <input type="button" class="btn btn-sm btn-danger btn-delete" data-pid="{{ obj.id }}" value="Удалить">
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script>
+    //Add
+    $('#btn-add').on('click', function(){
+      let output = '';
+      let specialization = $('#id_specialization').val();
+      let pid = $('#pid').val();
+      if(specialization == ''){
+        console.log('specialization is required');
+        document.querySelector('#id_specialization').setAttribute('style', 'border-color: red');
+      }else{
+        document.querySelector('#id_specialization').setAttribute('style', '');
+        data = {'id': pid, 'specialization': specialization};
+        $.ajax({
+          url: "{% url 'specs:add' %}",
+          method: 'POST',
+          data: data,
+
+          success:function(data){
+            x = data.specializations
+            if(data.status == 'OK'){
+              for(i=0; i<x.length; i++){
+                output += (
+                  "<tr><td>" + x[i].specialization + "</td><td>" +
+                  "<div class='float-end'>" +
+                  "<input type='button' class='btn btn-sm btn-warning btn-edit' data-pid='" + x[i].id + "' value='Изменить'> " +
+                  "<input type='button' class='btn btn-sm btn-danger btn-delete' data-pid='" + x[i].id + "' value='Удалить'> " +
+                  "</div></td></tr>"
+                )
+                document.querySelector('#id_specialization').value = '';
+                $('#tbody').html(output);
+                $('#pid').val('')
+              }
+            }
+          }
+        })
+      }
+    })
+
+    //Edit
+    $('#tbody').on('click', '.btn-edit', function(){
+      let pid = $(this).attr('data-pid');
+
+      data = {'pid': pid}
+
+      $.ajax({
+        url: "{% url 'specs:edit' %}",
+        method: 'GET',
+        data: data,
+
+        success:function(data){
+          if(data.status == 'OK'){
+            $('#id_specialization').val(data.specialization.specialization)
+            $('#pid').val(data.specialization.id)
+          }
+        }
+      })
+    })
+
+    //Delete
+    $('#tbody').on('click', '.btn-delete', function(){
+      let pid = $(this).attr('data-pid');
+
+      data = {'pid': pid};
+      mythis = this;
+
+      $.ajax({
+        url: "{% url 'specs:delete' %}",
+        method: 'POST',
+        data: data,
+
+        success:function(data){
+          if(data.status == 'OK'){
+            console.log(data.status);
+            $(mythis).closest("tr").fadeOut();
+          }
+        }
+      })
+    })
+  </script>
+{% endblock content %}

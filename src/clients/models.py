@@ -1,6 +1,6 @@
 from django.db import models
 
-from loaders.models import Specialization
+from specializations.models import Specialization
 
 
 TYPES_CLIENTS = [

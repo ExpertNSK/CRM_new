@@ -1,7 +1,7 @@
 from django import forms
 
 from clients.models import TYPES_CLIENTS, Client
-from loaders.models import Specialization
+from specializations.models import Specialization
 
 
 class CreateClientForm(forms.ModelForm):

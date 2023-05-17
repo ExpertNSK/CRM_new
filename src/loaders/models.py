@@ -52,12 +52,12 @@ class Loader(models.Model):
         max_length=150,
     )
     specialization = models.ManyToManyField(
-        'loaders.Specialization',
+        'specializations.Specialization',
         verbose_name='Специализация',
         related_name='specializations',
     )
     status = models.ForeignKey(
-        'loaders.Status',
+        'statuses.Status',
         verbose_name='Статус',
         on_delete=models.PROTECT,
     )
@@ -134,29 +134,3 @@ class Loader(models.Model):
         if not self.whatsapp:
             self.whatsapp = self.phone
         return super(Loader, self).save()
-
-
-class Status(models.Model):
-    status = models.CharField(
-        verbose_name='Статус',
-        max_length=50,
-        unique=True,
-    )
-
-    def __str__(self):
-        return self.status
-
-
-class Specialization(models.Model):
-    specialization = models.CharField(
-        verbose_name='Тип работы',
-        max_length=50,
-        unique=True,
-    )
-
-    class Meta:
-        verbose_name = 'Специализация'
-        verbose_name_plural = 'Специализации'
-
-    def __str__(self):
-        return self.specialization

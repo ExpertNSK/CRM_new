@@ -1,6 +1,8 @@
 from django import forms
+from specializations.models import Specialization
 
-from loaders.models import AREA_OF_RESIDENTS, Loader, Specialization, Status
+from loaders.models import AREA_OF_RESIDENTS, Loader
+from statuses.models import Status
 from users.models import CustomUser
 
 
@@ -124,37 +126,3 @@ class CreateLoaderForm(forms.ModelForm):
         if whatsapp and len(whatsapp) < 18:
             raise forms.ValidationError('Неверный формат номера телефона!')
         return super().clean(*args, **kwargs)
-
-
-class CreateSpecializationForm(forms.ModelForm):
-    specialization = forms.CharField(
-        label='Специализация',
-        max_length=50,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-                'autocomplete': 'off'
-            }
-        )
-    )
-
-    class Meta:
-        model = Specialization
-        fields = ('specialization',)
-
-
-class CreateStatusForm(forms.ModelForm):
-    status = forms.CharField(
-        label='Статус',
-        max_length=50,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-                'autocomplete': 'off'
-            }
-        )
-    )
-
-    class Meta:
-        model = Status
-        fields = ('status',)

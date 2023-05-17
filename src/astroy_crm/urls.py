@@ -14,7 +14,9 @@ urlpatterns = [
     path('passports/', include('passports.urls', namespace='passports')),
     path('paymethods/', include('paymethods.urls', namespace='paymethods')),
     path('shedule/', include('shedule.urls', namespace='shedule')),
+    path('specializations', include('specializations.urls', namespace='specs')),
     path('staff/', include('staff.urls', namespace='staff')),
+    path('statuses/', include('statuses.urls', namespace='statuses')),
     path('users/', include('users.urls', namespace='users')),
 ]
 
