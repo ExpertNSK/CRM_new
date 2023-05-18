@@ -68,9 +68,46 @@
         <div class="modal-body">
           {{ specs_form.as_p }}
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer specs">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
           <button type="button" class="btn btn-primary" id="btn-add">Добавить</button>
+          <script>
+            $('.specs').on('click', '#btn-add', function(){
+              let output = '';
+              let specialization = $(this.closest('#addSpecialization').querySelector('#id_specialization')).val();
+              
+              if(specialization == ''){
+                this.closest('#addSpecialization').querySelector('#id_specialization').setAttribute('style', 'border-color: red')
+              }else{
+                this.closest('#addSpecialization').querySelector('#id_specialization').setAttribute('style', '')
+
+                data = {'specialization': specialization};
+                mythis = this
+
+                $.ajax({
+                  url: "{% url 'specs:add' %}",
+                  method: 'POST',
+                  data: data,
+
+                  success:function(data){
+                    if(data.status == 'OK'){
+                      x = data.specializations
+                      for(i=0; i<x.length; i++){
+                        output += (
+                          "<li> <label for='id_specialization_" + i + "'> <input type='checkbox' name='specialization' value='" + x[i].id + "' id='id_specialization_" + i + "'> " + x[i].specialization + " </label> </li>"
+                        )
+                      }
+                      $('#id_specialization').html(output);
+                      $('#addSpecialization').modal('hide');
+                      $(mythis.closest('#addSpecialization').querySelector('#id_specialization')).val('');
+                    }else{
+                      console.log(data.status)
+                    }
+                  }
+                })
+              }
+            })
+          </script>
         </div>
       </div>
     </div>
@@ -86,9 +123,46 @@
         <div class="modal-body">
           {{ status_form.as_p }}
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer status">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
           <button type="button" class="btn btn-primary" id="btn-add">Добавить</button>
+          <script>
+            $('.status').on('click', '#btn-add', function(){
+              let output = "<option value='' selected=''>---------</option>'";
+              let status = $(this.closest('#addStatus').querySelector('#id_status')).val()
+
+              if(status == ''){
+                this.closest('#addStatus').querySelector('#id_status').setAttribute('style', 'border-color: red')
+              }else{
+                this.closest('#addStatus').querySelector('#id_status').setAttribute('style', '')
+
+                data = {'status': status}
+                mythis = this
+
+                $.ajax({
+                  url: "{% url 'statuses:add' %}",
+                  method: 'POST',
+                  data: data,
+
+                  success:function(data){
+                    if(data.status == 'OK'){
+                      x = data.status_data
+                      for(i=0; i<x.length; i++){
+                        output += (
+                        "<option value='" + x[i].id + "'> " + x[i].status + "</option> "
+                      )
+                      }
+                      $('#addStatus').modal('hide');
+                      $('#id_status').html(output);
+                      $(mythis.closest('#addStatus').querySelector('#id_status')).val('');
+                    }else{
+                      console.log(data.status)
+                    }
+                  }
+                })
+              }
+            })
+          </script>
         </div>
       </div>
     </div>

@@ -94,8 +94,7 @@
                 )
               }
               console.log(output)
-              document.querySelector('div[class="modal fade show"]').setAttribute('class', 'modal fade');
-              document.querySelector('div[class="modal-backdrop fade show"]').setAttribute('class', 'modal-backdrop fade');
+              $('#addPaymentType').modal('hide');
               $('#id_payment_type').html(output);
             }
           }
